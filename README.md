@@ -1,9 +1,18 @@
 # LatticeBoltzmannD2Q9
 
-A simple implementation of the lattice boltzmann method (d2q9). 
+A simple implementation of the lattice boltzmann method (d2q9) in python3. 
 
 The Lattice Boltzmann method is a (relatively new) method for numerically
 solving the Navier-Stokes equations on modern computing architectures.
+
+#Algorithm
+
+All simulations are on a 2D rectangular grid. Think of this as the cross-section of a pipe. 
+
+The characteristic length is "1". Given the sound speed of sqrt(1/3), I will define the characteristic speed as sqrt(1/3)/10. Then, I can choose the reynolds number and calculate the viscosity.
+
+
+
 
 # Design
 
@@ -30,3 +39,12 @@ Therefore, three functions will define the numerical solution:
 
 The information on flow velocity and density defines the solution to the navier stokes equations.
 Therefore, analysis of the fluid data is where the physics happens!
+
+# Some reminders (primarily for myself)
+
+https://www.python.org/dev/peps/pep-0020/
+
+JIT compilation and parallelism
+https://numba.pydata.org
+https://numba.pydata.org/numba-doc/dev/user/parallel.html
+https://numba.pydata.org/numba-doc/dev/reference/jit-compilation.html#numba.vectorize
