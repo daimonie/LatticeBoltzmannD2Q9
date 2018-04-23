@@ -3,9 +3,11 @@ from latticeboltzmann import latticeBoltzmann
 import matplotlib.pyplot as plt
 from matplotlib import cm
 
-numSteps = 1000
-numSnap = 50
-pipe = latticeBoltzmann(1, 500, 200, 0.5)
+re = 10000
+
+numSteps = 2000
+numSnap = 100
+pipe = latticeBoltzmann(re, 500, 200, 0.5)
 
 pipe.initialise()
 pipe.geometry ()
@@ -16,7 +18,7 @@ for time in range(numSteps):
 
 	if time%numSnap == 0:
 		plt.clf ()
-		plt.imshow(speed, cmap=cm.Spectral)
+		plt.imshow(speed.transpose(), cmap=cm.Spectral)
 		plt.xlabel("x")
 		plt.ylabel("y")
 		plt.title("Cylindrical Pipe, Re = %.3f" % pipe.reynolds)

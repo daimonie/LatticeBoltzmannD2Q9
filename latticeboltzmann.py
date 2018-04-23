@@ -114,7 +114,6 @@ class latticeBoltzmann:
 		velocities = np.dot( self.basisVelocity.transpose(), self.distributions.transpose(1,0,2))/density
 		velocities[:, self.obstacles] = 0.0
 
-
 		densityEquilibrium = self.equilibrium(density, velocities)
 
 		# initial flow on left-most cells

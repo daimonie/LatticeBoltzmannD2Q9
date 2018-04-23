@@ -13,7 +13,6 @@ The characteristic length is "1". Given the sound speed of sqrt(1/3), I will def
 
 
 
-
 # Design
 
 Ideally, a physicist wants to do physics. The numerical solution should be as simple as possible.
