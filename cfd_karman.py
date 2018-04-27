@@ -3,12 +3,13 @@ from karman import karmanVortexSheet
 import matplotlib.pyplot as plt
 from matplotlib import cm
 
-re = 10
+re = 100
 
 numSteps = 10000
 numSnap = int(numSteps/100);
 
-Karman = karmanVortexSheet(re, 500, 200, 0.5)
+finegrain = 2
+Karman = karmanVortexSheet(re, 500*finegrain, 200*finegrain, 0.5)
 
 Karman.initialise()
 Karman.geometry ()
