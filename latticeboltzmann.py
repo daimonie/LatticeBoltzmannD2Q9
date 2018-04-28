@@ -3,7 +3,7 @@ import sys as sys
 import time as time
 from numba import jit
 
-@jit
+@jit(parallel=True)
 def numba_equilibrium(basisVelocity, nodes, weights, density, velocities):
 	"""Calculates the equilibrium distributions"""
 
@@ -17,7 +17,7 @@ def numba_equilibrium(basisVelocity, nodes, weights, density, velocities):
 
 	return equilibriumDistribution 
 
-@jit
+@jit(parallel=True)
 def numba_collide(distributions, relaxationTime, equilibrium):
 	return distributions - 1/relaxationTime * (distributions - equilibrium);
 
