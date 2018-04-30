@@ -24,7 +24,7 @@ def numba_collide(distributions, relaxationTime, equilibrium):
 
 class latticeBoltzmann:
     """ D2Q9 LB base class."""
-    def __init__(self, reynolds, nodesHorizontal, nodesVertical):
+    def __init__(self, reynolds, nodesHorizontal, nodesVertical, lengthScale):
         #I prefer keeping track of this for benchmarking
         self.startTime = time.time() 
 
@@ -34,7 +34,8 @@ class latticeBoltzmann:
 
         #calculate the viscosity given the reynolds number
         self.reynolds = reynolds
-        self.viscosity = self.velocity * nodesHorizontal / self.reynolds
+        self.lengthScale = lengthScale
+        self.viscosity = self.velocity * lengthScale / self.reynolds
 
         #3.0 is because you divide by the sound speed squared
         #relaxationTime is used for streaming
@@ -117,10 +118,12 @@ class latticeBoltzmann:
         velocities, density = self.applyGeometry(velocities, density, densityEquilibrium)
 
         newDistributions = self.collide(densityEquilibrium);
-
+        
+        #Bounce-Back no-slip distribution
         for i in range(9):
             newDistributions[i, self.obstacles] = self.distributions[ self.noSlip[i], self.obstacles];
-
+        
+        #Stream
         for i in range(9):
             self.distributions[i,:,:] = np.roll(np.roll(newDistributions[i,:,:], self.basisVelocity[i,0], axis=0), self.basisVelocity[i, 1], axis=1)
 
