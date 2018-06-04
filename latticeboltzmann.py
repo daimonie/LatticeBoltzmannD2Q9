@@ -33,7 +33,7 @@ def numba_roll( new_distributions, velocities):
             final_distributions[i,:,:] = np.roll(new_distributions[i,:,:], velocities[i, :], axis=(0,1))
 
     return final_distributions
-    
+
 class latticeBoltzmann:
     """ D2Q9 LB base class."""
     def __init__(self, reynolds, nodes_horizontal, nodes_vertical, length_scale):
@@ -103,7 +103,7 @@ class latticeBoltzmann:
         self.distributions = self.equilibrium( 1.0, self.flow)
     def applyGeometry(self, velocities, density, density_equilibrium):
         #This is the left-boundary dirichlet condition
-        velocities[:, 0, :] = self.flow[:, 0, :]
+        velocities[:, 0, :] = self.flow[:, 0, :] 
 
         #compute density from known pop
         sum_special1 = self.sum_population(self.distributions[self.special[1], 0, :]) 
