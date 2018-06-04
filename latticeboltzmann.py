@@ -22,39 +22,6 @@ def numba_equilibrium(basis_velocity, nodes, weights, density, velocities):
 def numba_collide(distributions, relaxation_time, equilibrium):
     return distributions - 1/relaxation_time * (distributions - equilibrium)
   
-def numba_numpy_roll(a, shift):
-    """
-    Roll array elements along a given axis. 
-
-    I just copy pasted it from the numpy implementation to use JIT/parallel. Removed a number of safety checks as well.
-
-    """  
-
-    #hard coding these
-    axis = (0, 1)
-    shifts = {0: 0, 1: 0}
-
-
-    broadcasted = np.broadcast(shift, axis) 
-
-    for sh, ax in broadcasted:
-        shifts[ax] += sh
-
-    rolls = [((slice(None), slice(None)),)] * a.ndim
-    for ax, offset in shifts.items():
-        offset %= a.shape[ax] or 1  # If `a` is empty, nothing matters.
-        if offset:
-            # (original, result), (original, result)
-            rolls[ax] = ((slice(None, -offset), slice(offset, None)),
-                         (slice(-offset, None), slice(None, offset)))
-
-    result = np.empty_like(a)
-    for indices in itertools.product(*rolls):
-        arr_index, res_index = zip(*indices)
-        result[res_index] = a[arr_index]
-
-    return result
- 
 @jit(parallel=True)
 def numba_roll( new_distributions, velocities):
     #implementation of numpy roll with JIT parallel
@@ -63,9 +30,10 @@ def numba_roll( new_distributions, velocities):
     final_distributions = np.zeros(shape)  
 
     for i in range(shape[0]):
-            final_distributions[i,:,:] = numba_numpy_roll(new_distributions[i,:,:], velocities[i, :])
+            final_distributions[i,:,:] = np.roll(new_distributions[i,:,:], velocities[i, :], axis=(0,1))
 
     return final_distributions
+    
 class latticeBoltzmann:
     """ D2Q9 LB base class."""
     def __init__(self, reynolds, nodes_horizontal, nodes_vertical, length_scale):
