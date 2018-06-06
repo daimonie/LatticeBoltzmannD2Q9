@@ -4,7 +4,7 @@ import time as time
 from latticeboltzmann import latticeBoltzmann
 from numba import jit
  
-class karmanVortexSheet(latticeBoltzmann):
+class tubeConstriction(latticeBoltzmann):
     """ D2Q9 LB Karman Vortex Sheet class.""" 
     def geometry(self, location):
         """Defines the geometry, boundaries and suchlike. In the base class, this is a pipe. """
