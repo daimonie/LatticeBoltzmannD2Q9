@@ -99,6 +99,7 @@ class latticeBoltzmann:
 
         self.flow = np.fromfunction(lambda dd, xx, yy: (1-dd) * self.velocity * (1 + 1e-4*np.sin(yy/self.nodes[1]*2*np.pi)), (2, self.nodes[0], self.nodes[1]))
 
+        self.flow[:, self.obstacles] = 0.0
         #initial distributions
         self.distributions = self.equilibrium( 1.0, self.flow)
     def applyGeometry(self, velocities, density, density_equilibrium):

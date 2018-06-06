@@ -9,13 +9,14 @@ class tubeConstriction(latticeBoltzmann):
     def geometry(self, location, height):
         """Defines the geometry, boundaries and suchlike. In the base class, this is a pipe. """
 
-        #circular object
+        #circular object      
         radius = (self.nodes[1]-height)/2
         
-        first_circle_obstruction = np.fromfunction(lambda x, y: ((x-self.nodes[0]*location)**2 + y**2) < (radius)**2, (self.nodes[0], self.nodes[1]))
-        second_circle_obstruction = np.fromfunction(lambda x, y: ((x-self.nodes[0]*location)**2 + (y-self.nodes[1])**2) < (radius)**2, (self.nodes[0], self.nodes[1]))
+        first_circle_obstruction = lambda x, y: (x-self.nodes[0]*location)**2 + y**2 < (radius)**2
+        second_circle_obstruction = lambda x, y: (x-self.nodes[0]*location)**2 + (y-self.nodes[1])**2 < (radius)**2
      
-        is_obstacle = first_circle_obstruction or second_circle_obstruction
+        is_obstacle = lambda x,y: first_circle_obstruction(x, y) or second_circle_obstruction(x, y)
+
 
         self.obstacles = np.array([[is_obstacle(y,x) for x in range(self.nodes[1])] for y in range(self.nodes[0])])
  
