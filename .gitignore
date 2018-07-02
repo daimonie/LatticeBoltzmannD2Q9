@@ -1,1 +1,5 @@
-"fig/*" 
+fig/*
+palabos/*
+*.png
+palabos/*.png
+fig/*.png
