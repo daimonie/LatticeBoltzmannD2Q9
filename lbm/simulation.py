@@ -91,6 +91,8 @@ class lattice_boltzmann:
     def initialise(self):
         self.unlocked = False
 
+        print(self.initial_velocity)
+        
         self.distributions_equilibrium = self.equilibrium(1.0, self.initial_velocity)
         self.distributions = self.distributions_equilibrium.copy()
     def propagate(self):
