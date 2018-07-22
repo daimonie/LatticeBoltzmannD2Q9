@@ -1,4 +1,5 @@
 import numpy as np 
+from lbm import common as helper
 
 #simple class for lbm, based on palabos notebooks
 class lattice_boltzmann:
@@ -57,13 +58,9 @@ class lattice_boltzmann:
     def __lattice_init(self):
         """(Private) initialises the lattice, setting boundaries and basis vectors"""
         
-        # The D2Q9 lattice vector basis.
-        self.lattice_velocities = np.array([(x,y) for x in [0,-1,1] for y in [0,-1,1]]) 
-                                       
-        # Weights of the D2Q9 basis.
-        self.weights = 1./36. * np.ones(9)    
-        self.weights[np.asarray([np.linalg.norm(ci)<1.1 for ci in self.lattice_velocities])] = 1./9.
-        self.weights[0] = 4./9.
+
+        #Get the lattice vectors and weights. These are well known.
+        self.lattice_velocities, self.weights = helper.basis_d2q9()
 
         self.noslip = [self.lattice_velocities.tolist().index((-self.lattice_velocities[i]).tolist()) for i in range(9)] 
         
@@ -87,12 +84,10 @@ class lattice_boltzmann:
         """sets the inflow_velocity using the given anonymous function"""
         assert(self.unlocked)
 
-        self.initial_velocity = np.fromfunction(anonymous_velocity, (self.horizontal, self.vertical))
+        self.initial_velocity = np.fromfunction(anonymous_velocity, (2, self.horizontal, self.vertical))
     def initialise(self):
-        self.unlocked = False
+        self.unlocked = False 
 
-        print(self.initial_velocity)
-        
         self.distributions_equilibrium = self.equilibrium(1.0, self.initial_velocity)
         self.distributions = self.distributions_equilibrium.copy()
     def propagate(self):
