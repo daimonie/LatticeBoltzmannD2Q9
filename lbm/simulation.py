@@ -86,12 +86,14 @@ class lattice_boltzmann:
 
         self.initial_velocity = np.fromfunction(anonymous_velocity, (2, self.horizontal, self.vertical))
     def initialise(self):
+        """ Initialises simulation and locks its state (no more set_* methods)"""
+
         self.unlocked = False 
 
         self.distributions_equilibrium = self.equilibrium(1.0, self.initial_velocity)
         self.distributions = self.distributions_equilibrium.copy()
     def propagate(self):
-        
+        """ Propagates the simulation to the next iteration. In LBM, this means collision and streaming."""
         assert(self.unlocked == False)
 
         #outflow conditions (right wall)
