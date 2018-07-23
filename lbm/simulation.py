@@ -91,7 +91,9 @@ class lattice_boltzmann:
         self.distributions_equilibrium = self.equilibrium(1.0, self.initial_velocity)
         self.distributions = self.distributions_equilibrium.copy()
     def propagate(self):
-    
+        
+        assert(self.unlocked == False)
+
         #outflow conditions (right wall)
         self.distributions[self.boundary_right, -1, :] = self.distributions[self.boundary_right, -2, :]
 
@@ -110,10 +112,11 @@ class lattice_boltzmann:
         #re-compute the inflow boundary densities
         self.density[0, :] = 1./(1.-self.velocities[0,0,:]) * (sumpop(self.distributions[self.boundary_vertical, 0, :])+2.*sumpop(self.distributions[self.boundary_right, 0, :]))
 
+        self.distributions = np.array(self.distributions)
+
         current_equilibrium = self.equilibrium(self.density, self.velocities)
-        
         # Left wall: Zou/He boundary condition.
-        self.distributions[self.boundary_left, 0, :] = self.distributions[self.boundary_right, 0, :] + current_equilibrium[self.boundary_left, 0, :] - self.distributions[self.boundary_left, 0, :]        
+        self.distributions[self.boundary_left, 0, :] = self.distributions[self.boundary_right, 0, :] + current_equilibrium[self.boundary_left, 0, :] - self.distributions[self.boundary_right, 0, :]        
 
         # Collision
         distributions_new = self.distributions - self.relaxation * (self.distributions - current_equilibrium)
@@ -124,8 +127,9 @@ class lattice_boltzmann:
 
         #Streaming
         for i in range(9):
-            self.distributions = np.roll(np.roll( distributions_new[i,:,:], self.lattice_velocities[i, 0], axis=0), c[i, 1], axis=1)
-
+            self.distributions[i,:,:] = np.roll(np.roll( distributions_new[i,:,:], self.lattice_velocities[i, 0], axis=0), self.lattice_velocities[i, 1], axis=1)
+ 
+        self.distributions = np.array(self.distributions)
 
     def get_velocities(self):
         """Returns velocity field"""

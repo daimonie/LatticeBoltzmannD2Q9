@@ -2,16 +2,16 @@ import numpy as np
 from numba import jit
 
 @jit(parallel=True)
-def equilibrium(mass_density, speed, lattice_velocities, horizontal, vertical): 
-    
+def equilibrium(mass_density, speed, horizontal, vertical): 
+     
     basis_vectors, basis_weights = basis_d2q9()
     
-
-    lattice_speed   = 3.0 * np.dot(lattice_velocities, speed.transpose(1,0,2))
+    lattice_speed   = 3.0 * np.dot(basis_vectors, speed.transpose(1,0,2))
     speed_squared = 3./2.*(speed[0]**2+speed[1]**2)
     equilibrium_densities = np.zeros((9, horizontal, vertical))
     for i in range(9):
         equilibrium_densities[i,:,:] = mass_density*basis_weights[i]*(1.+lattice_speed[i]+0.5*lattice_speed[i]**2-speed_squared)
+ 
     return equilibrium_densities 
 
 def velocity(speed, vertical):
